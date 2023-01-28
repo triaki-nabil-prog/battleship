@@ -21,3 +21,14 @@ test("ship sink", ()=>{
     obj.hit();
     expect(obj).toEqual({length:3,hits:3,sunk:true})
 });
+
+test("try to hit a already sunk ship", ()=>{
+    let obj = Ship(3);
+    obj.hit();
+    obj.hit();
+    obj.hit();
+    obj.hit();
+    obj.hit();
+    obj.hit();
+    expect(obj).toEqual({length:3,hits:3,sunk:true})
+});

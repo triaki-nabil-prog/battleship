@@ -3,11 +3,12 @@ export const Ship = (length = 0) => {
     // so we don't have method's copied when ships created 
     const objProto = {
         hit() {
-            this.hits++;
-            this.isSunk();
+            if (!this.sunk) {
+                this.hits++;
+                this.isSunk();
+            }
         },
         isSunk() { if (this.length === this.hits) this.sunk = true; }
     }
-
     return Object.assign(Object.create(objProto), { length, hits: 0, sunk: false });
 }
