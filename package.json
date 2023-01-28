@@ -1,0 +1,31 @@
+{
+  "name": "battleship",
+  "version": "1.0.0",
+  "description": "part of the odin project bootCamp assignments ",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test w": "jest --watch",
+    "build": "webpack",
+    "watch": "webpack --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/triaki-nabil-prog/battleship.git"
+  },
+  "author": "Triaki Nabil",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/triaki-nabil-prog/battleship/issues"
+  },
+  "homepage": "https://github.com/triaki-nabil-prog/battleship#readme",
+  "devDependencies": {
+    "@babel/core": "^7.20.12",
+    "@babel/preset-env": "^7.20.2",
+    "babel-loader": "^9.1.2",
+    "css-loader": "^6.7.3",
+    "jest": "^29.4.1",
+    "style-loader": "^3.3.1",
+    "webpack-cli": "^5.0.1"
+  }
+}
