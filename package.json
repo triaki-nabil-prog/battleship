@@ -4,8 +4,7 @@
   "description": "part of the odin project bootCamp assignments ",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
-    "test w": "jest --watch",
+    "test": "jest --watch",
     "build": "webpack",
     "watch": "webpack --watch"
   },
