@@ -92,3 +92,28 @@ test("ships don't over lap ", () => {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ]);
 });
+
+test("ships hit ", () => {
+    let GameBoardOne = GameBoard();
+    let s1 = Ship(4);
+    let s2 = Ship(3);
+    GameBoardOne.placeShip(s1, 0, 0, "y");
+    GameBoardOne.placeShip(s2, 2, 2, "y");
+    GameBoardOne.receiveAttack(0, 0);
+    GameBoardOne.receiveAttack(0, 1);
+    GameBoardOne.receiveAttack(2, 2);
+    GameBoardOne.receiveAttack(1, 0);
+    console.log(GameBoardOne.GameBoardData);
+    expect(GameBoardOne.GameBoardData).toEqual([
+        ["Hit", "Miss", 0, 0, 0, 0, 0, 0, 0, 0],
+        ["Hit", 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [s1, 0, "Hit", 0, 0, 0, 0, 0, 0, 0],
+        [s1, 0, s2, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, s2, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    ]);
+});

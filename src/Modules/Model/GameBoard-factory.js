@@ -1,6 +1,7 @@
 import { Ship } from "./Ship-factory.js";
 // game board prototype methods 
 const GameBoardProto = {
+    // places a ship at a given coordinate's on the game board
     placeShip(ship, x, y, axis) {
         // don't let the ship go over the game board boundaries 
         if (!(0 <= x && x < 10) || !(0 <= y && y < 10)) return;
@@ -19,17 +20,24 @@ const GameBoardProto = {
         }
         //if ship is in the X axis place it 
         if (axis === 'x' || axis === 'X') {
-            for(let i=0; i<ship.length; i++){
-                this.GameBoardData[y][x+i] = ship;
+            for (let i = 0; i < ship.length; i++) {
+                this.GameBoardData[y][x + i] = ship;
             }
         }
         //if ship is in the Y axis place it 
         else if (axis === 'y' || axis === 'Y') {
-            for(let i=0; i<ship.length; i++){
-                this.GameBoardData[y+i][x] = ship;
+            for (let i = 0; i < ship.length; i++) {
+                this.GameBoardData[y + i][x] = ship;
             }
         }
     },
+    receiveAttack(x, y) {
+        if (this.GameBoardData[y][x]) { 
+            this.GameBoardData[y][x].hit(); 
+            this.GameBoardData[y][x]="Hit"
+        }
+        else this.GameBoardData[y][x]="Miss";
+    }
 }
 //Game board factory function 
 export const GameBoard = () => {
