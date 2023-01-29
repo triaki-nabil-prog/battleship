@@ -30,13 +30,21 @@ const GameBoardProto = {
                 this.GameBoardData[y + i][x] = ship;
             }
         }
+        this.Ships.push(ship);
     },
     receiveAttack(x, y) {
-        if (this.GameBoardData[y][x]) { 
-            this.GameBoardData[y][x].hit(); 
-            this.GameBoardData[y][x]="Hit"
+        if (this.GameBoardData[y][x]) {
+            this.GameBoardData[y][x].hit();
+            this.GameBoardData[y][x] = "Hit";
         }
-        else this.GameBoardData[y][x]="Miss";
+        else this.GameBoardData[y][x] = "Miss";
+    },
+    // test if all ships are sunk
+    allSunk() {
+        let NbSunken = 0;
+        this.Ships.forEach(ship => {if (ship.sunk) NbSunken++;});
+        if (this.Ships.length === NbSunken) return true;
+        else return false;
     }
 }
 //Game board factory function 
@@ -53,6 +61,7 @@ export const GameBoard = () => {
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     ];
-    return Object.assign(Object.create(GameBoardProto), { GameBoardData });
+    let Ships = [];
+    return Object.assign(Object.create(GameBoardProto), { GameBoardData, Ships });
 }
 
