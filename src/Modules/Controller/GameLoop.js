@@ -7,6 +7,8 @@ import { pubsub } from "./pubsub.js";
 
 
 export let GameLoop = (function () {
+
+
     // create new player
     let PlayerOne = Player();
     let PlayerTwo = Player();
@@ -26,7 +28,35 @@ export let GameLoop = (function () {
     let DestroyerTwo = Ship(3);
     let SubmarineTwo = Ship(3);
     let PatrolBoatTwo = Ship(2);
+    //event subscription
+    pubsub.subscribe("cordAttack", PlayerOneAttack)
+    // player one attack battlefield of player two 
+    function PlayerOneAttack([x, y]) {
+        PlayerOne.attack(x, y, BattleFieldTwo);
+        // refresh display  
+        pubsub.publish("GameBoardTwo", BattleFieldTwo.GameBoardData);
+        PlayerTwoAttack();
+    }
+    // player two attack battlefield of player one
+    function PlayerTwoAttack() {
+        PlayerTwo.RandomAttack(BattleFieldOne);
+        // refresh display  
+        pubsub.publish("GameBoardOne", BattleFieldOne.GameBoardData);
+    }
+    // place ships one battle field two randomly 
+    function RandomShipsPlacement(Ship) {
 
+        // generate random cord
+        let randX = Math.floor(Math.random() * 10);
+        let randY = Math.floor(Math.random() * 10);
+        const axis = "xy";
+        const randomAxis = axis[Math.floor(Math.random() * axis.length)];
+        // place the ship
+        let state = BattleFieldTwo.placeShip(Ship, randX, randY, randomAxis);
+        // base case
+        if (state === true) { return; }
+        RandomShipsPlacement(Ship);
+    }
     //place Ships on battlefield
     //player one 
     BattleFieldOne.placeShip(CarrierOne, 0, 0, 'y');
@@ -35,20 +65,12 @@ export let GameLoop = (function () {
     BattleFieldOne.placeShip(SubmarineOne, 6, 5, 'x');
     BattleFieldOne.placeShip(PatrolBoatOne, 7, 6, 'x');
     //player two 
-    BattleFieldTwo.placeShip(CarrierTwo, 2, 0, 'x');
-    BattleFieldTwo.placeShip(BattleshipTwo, 0, 9, 'x');
-    BattleFieldTwo.placeShip(DestroyerTwo, 9, 7, 'Y');
-    BattleFieldTwo.placeShip(SubmarineTwo, 0, 4, 'x');
-    BattleFieldTwo.placeShip(PatrolBoatTwo, 5, 6, 'x');
+    RandomShipsPlacement(CarrierTwo);
+    RandomShipsPlacement(BattleshipTwo);
+    RandomShipsPlacement(DestroyerTwo);
+    RandomShipsPlacement(SubmarineTwo);
+    RandomShipsPlacement(PatrolBoatTwo);
 
-    //event subscription
-    pubsub.subscribe("cordAttack", PlayerOneAttack)
-    // player one attack battlefield of player two 
-    function PlayerOneAttack([x, y]) {
-        PlayerOne.attack(x, y, BattleFieldTwo);
-        // refresh display  data
-        pubsub.publish("GameBoardTwo", BattleFieldTwo.GameBoardData);
-    }
 
     // send game board data to UI
     pubsub.publish("GameBoardOne", BattleFieldOne.GameBoardData);

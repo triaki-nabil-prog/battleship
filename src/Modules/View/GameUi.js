@@ -58,6 +58,8 @@ export let GameUi = (function () {
         for (let y = 0; y < 10; y++) {
             for (let x = 0; x < 10; x++) {
                 if (typeof FieldDataOne[y][x] === "object") { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#8A5F08" }
+                else if (FieldDataOne[y][x] === "Hit") { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#B02522" }
+                else if (FieldDataOne[y][x] === "Miss") { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#354F8B" }
             }
         }
     }

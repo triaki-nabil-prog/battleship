@@ -4,20 +4,20 @@ const GameBoardProto = {
     // places a ship at a given coordinate's on the game board
     placeShip(ship, x, y, axis) {
         // don't let the ship go over the game board boundaries 
-        if (!(0 <= x && x < 10) || !(0 <= y && y < 10)) return;
+        if (!(0 <= x && x < 10) || !(0 <= y && y < 10)) return false;
         // case ship does not fit in x axis
-        if (((ship.length-1) + x > 9 || y > 9) && (axis === 'x' || axis === 'X')) return;
+        if (((ship.length-1) + x > 9 || y > 9) && (axis === 'x' || axis === 'X')) return false;
         // case ship does not fit in y axis
-        if ((x > 9 || (ship.length-1) + y > 9) && (axis === 'y' || axis === 'Y')) return;
+        if ((x > 9 || (ship.length-1) + y > 9) && (axis === 'y' || axis === 'Y')) return false;
         // case  ship overlap with another ship 
         if (axis === 'x' || axis === 'X') {
             for (let i = 0; i < ship.length; i++) {
-                if (this.GameBoardData[y][x + i]) return;
+                if (this.GameBoardData[y][x + i]) return false;
             }
         }
         else if (axis === 'y' || axis === 'Y') {
             for (let i = 0; i < ship.length; i++) {
-                if (this.GameBoardData[y + i][x]) return;
+                if (this.GameBoardData[y + i][x]) return false;
             }
         }
         //if ship is in the X axis place it 
@@ -33,6 +33,7 @@ const GameBoardProto = {
             }
         }
         this.Ships.push(ship);
+        return true;
     },
     receiveAttack(x, y) {
         if (this.GameBoardData[y][x]) {
