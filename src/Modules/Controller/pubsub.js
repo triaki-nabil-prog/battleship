@@ -4,6 +4,7 @@ export let pubsub = {
     subscriptions: {
         GameBoardOne: [],
         GameBoardTwo: [],
+        cordAttack:[],
     },
 
     subscribe: function (subscriptionName, fn) {

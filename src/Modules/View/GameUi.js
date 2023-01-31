@@ -18,6 +18,7 @@ export let GameUi = (function () {
     AddGlobalEventListener("click", ".new-game", PlaceShips);
     AddGlobalEventListener("click", ".restart", RestartGame);
     AddGlobalEventListener("click", ".start", DisplayBattleField);
+    AddGlobalEventListener("click", ".grid-two div", AttackFieldTwo);
     //event listeners binder function
     function AddGlobalEventListener(type, selector, callback) {
         document.addEventListener(type, (e) => {
@@ -54,10 +55,9 @@ export let GameUi = (function () {
     }
     // populate players One game board one 
     function RenderFieldOne(FieldDataOne) {
-        console.log(FieldDataOne);
         for (let y = 0; y < 10; y++) {
             for (let x = 0; x < 10; x++) {
-                if (typeof FieldDataOne[y][x] === "object") {  GridOneCells[Number(`${y}${x}`)].style.backgroundColor="#8A5F08" }
+                if (typeof FieldDataOne[y][x] === "object") { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#8A5F08" }
             }
         }
     }
@@ -65,8 +65,23 @@ export let GameUi = (function () {
     function RenderFieldTwo(FieldDataTwo) {
         for (let y = 0; y < 10; y++) {
             for (let x = 0; x < 10; x++) {
-                if (typeof FieldDataTwo[y][x] === "object") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor="#8A5F08" }
+                if (typeof FieldDataTwo[y][x] === "object") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#8A5F08" }
+                else if (FieldDataTwo[y][x] === "Hit") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#B02522" }
+                else if (FieldDataTwo[y][x] === "Miss") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#354F8B" }
             }
         }
+    }
+    // attack enemy battle field  two 
+    function AttackFieldTwo(cell) {
+        let yx, rest = 0;
+        let y, x = 0;
+        let coordinate = [];
+        GridTwoCells.forEach(elem => {
+            if (elem.className === cell.target.className) [rest, yx] = elem.className.split('-');
+        });
+        [y, x] = yx.split('');
+        coordinate.push(+x);
+        coordinate.push(+y);
+        pubsub.publish("cordAttack", coordinate)
     }
 })();

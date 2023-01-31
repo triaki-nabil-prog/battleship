@@ -41,6 +41,15 @@ export let GameLoop = (function () {
     BattleFieldTwo.placeShip(SubmarineTwo, 0, 4, 'x');
     BattleFieldTwo.placeShip(PatrolBoatTwo, 5, 6, 'x');
 
+    //event subscription
+    pubsub.subscribe("cordAttack", PlayerOneAttack)
+    // player one attack battlefield of player two 
+    function PlayerOneAttack([x, y]) {
+        PlayerOne.attack(x, y, BattleFieldTwo);
+        // refresh display  data
+        pubsub.publish("GameBoardTwo", BattleFieldTwo.GameBoardData);
+    }
+
     // send game board data to UI
     pubsub.publish("GameBoardOne", BattleFieldOne.GameBoardData);
     pubsub.publish("GameBoardTwo", BattleFieldTwo.GameBoardData);
