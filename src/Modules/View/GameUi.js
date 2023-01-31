@@ -11,6 +11,8 @@ export let GameUi = (function () {
     const DisplayText = document.querySelector(".display-text");
     const restart = document.querySelector(".restart");
     const start = document.querySelector(".start");
+    const GridOneCells = document.querySelectorAll(".grid-one div");
+    const GridTwoCells = document.querySelectorAll(".grid-two div");
 
     //Bind events
     AddGlobalEventListener("click", ".new-game", PlaceShips);
@@ -53,10 +55,18 @@ export let GameUi = (function () {
     // populate players One game board one 
     function RenderFieldOne(FieldDataOne) {
         console.log(FieldDataOne);
-
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 10; x++) {
+                if (typeof FieldDataOne[y][x] === "object") {  GridOneCells[Number(`${y}${x}`)].style.backgroundColor="#8A5F08" }
+            }
+        }
     }
     // populate players Two game board Two 
     function RenderFieldTwo(FieldDataTwo) {
-        console.log(FieldDataTwo);
+        for (let y = 0; y < 10; y++) {
+            for (let x = 0; x < 10; x++) {
+                if (typeof FieldDataTwo[y][x] === "object") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor="#8A5F08" }
+            }
+        }
     }
 })();
