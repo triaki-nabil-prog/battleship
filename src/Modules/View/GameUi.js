@@ -47,6 +47,7 @@ export let GameUi = (function () {
         restart.style.display = "none";
         start.style.display = "none";
         NewPlayerField.style.display = "flex";
+        pubsub.publish("resetBoards",true);
     }
     // display both game boards 
     function DisplayBattleField() {
@@ -60,6 +61,7 @@ export let GameUi = (function () {
                 if (typeof FieldDataOne[y][x] === "object") { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#8A5F08" }
                 else if (FieldDataOne[y][x] === "Hit") { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#B02522" }
                 else if (FieldDataOne[y][x] === "Miss") { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#354F8B" }
+                else if(FieldDataOne[y][x] === 0){GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#0F265D" }
             }
         }
     }
@@ -70,6 +72,7 @@ export let GameUi = (function () {
                 if (typeof FieldDataTwo[y][x] === "object") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#8A5F08" }
                 else if (FieldDataTwo[y][x] === "Hit") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#B02522" }
                 else if (FieldDataTwo[y][x] === "Miss") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#354F8B" }
+                else if(FieldDataTwo[y][x] === 0){GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#0F265D" }
             }
         }
     }

@@ -7,8 +7,6 @@ import { pubsub } from "./pubsub.js";
 
 
 export let GameLoop = (function () {
-
-
     // create new player
     let PlayerOne = Player();
     let PlayerTwo = Player();
@@ -28,8 +26,30 @@ export let GameLoop = (function () {
     let DestroyerTwo = Ship(3);
     let SubmarineTwo = Ship(3);
     let PatrolBoatTwo = Ship(2);
+
+    function init() {
+        //place Ships on battlefield
+        //player one 
+        BattleFieldOne.placeShip(CarrierOne, 0, 0, 'y');
+        BattleFieldOne.placeShip(BattleshipOne, 4, 5, 'y');
+        BattleFieldOne.placeShip(DestroyerOne, 2, 2, 'y');
+        BattleFieldOne.placeShip(SubmarineOne, 6, 5, 'x');
+        BattleFieldOne.placeShip(PatrolBoatOne, 7, 6, 'x');
+        //player two 
+        RandomShipsPlacement(CarrierTwo);
+        RandomShipsPlacement(BattleshipTwo);
+        RandomShipsPlacement(DestroyerTwo);
+        RandomShipsPlacement(SubmarineTwo);
+        RandomShipsPlacement(PatrolBoatTwo);
+        // send game board data to UI
+        pubsub.publish("GameBoardOne", BattleFieldOne.GameBoardData);
+        pubsub.publish("GameBoardTwo", BattleFieldTwo.GameBoardData);
+    }
+
+
     //event subscription
-    pubsub.subscribe("cordAttack", PlayerOneAttack)
+    pubsub.subscribe("cordAttack", PlayerOneAttack);
+    pubsub.subscribe("resetBoards", Reset);
     // player one attack battlefield of player two 
     function PlayerOneAttack([x, y]) {
         PlayerOne.attack(x, y, BattleFieldTwo);
@@ -57,22 +77,34 @@ export let GameLoop = (function () {
         if (state === true) { return; }
         RandomShipsPlacement(Ship);
     }
-    //place Ships on battlefield
-    //player one 
-    BattleFieldOne.placeShip(CarrierOne, 0, 0, 'y');
-    BattleFieldOne.placeShip(BattleshipOne, 4, 5, 'y');
-    BattleFieldOne.placeShip(DestroyerOne, 2, 2, 'y');
-    BattleFieldOne.placeShip(SubmarineOne, 6, 5, 'x');
-    BattleFieldOne.placeShip(PatrolBoatOne, 7, 6, 'x');
-    //player two 
-    RandomShipsPlacement(CarrierTwo);
-    RandomShipsPlacement(BattleshipTwo);
-    RandomShipsPlacement(DestroyerTwo);
-    RandomShipsPlacement(SubmarineTwo);
-    RandomShipsPlacement(PatrolBoatTwo);
+    // reset data 
+    function Reset() {
+        BattleFieldOne.GameBoardData = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ];
+        BattleFieldTwo.GameBoardData = [
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+        ];
+        init();
+    }
+    init();
 
-
-    // send game board data to UI
-    pubsub.publish("GameBoardOne", BattleFieldOne.GameBoardData);
-    pubsub.publish("GameBoardTwo", BattleFieldTwo.GameBoardData);
 })();

@@ -5,6 +5,7 @@ export let pubsub = {
         GameBoardOne: [],
         GameBoardTwo: [],
         cordAttack:[],
+        resetBoards:[],
     },
 
     subscribe: function (subscriptionName, fn) {
