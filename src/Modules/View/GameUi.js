@@ -25,27 +25,38 @@ export let GameUi = (function () {
         });
     }
     //event subscription
-
+    pubsub.subscribe("GameBoardOne", RenderFieldOne);
+    pubsub.subscribe("GameBoardTwo", RenderFieldTwo);
     //display player game board to place ships 
     function PlaceShips() {
-        NewPlayerField.style.display="none";
-        GridOne.style.display="grid";
-        DisplayText.style.display="block"
-        DisplayText.textContent=`Place your Ships Captain ${PlayerName.value}`;
-        restart.style.display="block";
-        start.style.display="block";
+        NewPlayerField.style.display = "none";
+        GridOne.style.display = "grid";
+        DisplayText.style.display = "block"
+        DisplayText.textContent = `Place your Ships Captain ${PlayerName.value}`;
+        restart.style.display = "block";
+        start.style.display = "block";
     }
     // return to  captain name selection 
-    function RestartGame(){
-        GridOne.style.display="none";
-        GridTwo.style.display="none";
-        DisplayText.style.display="none";
-        restart.style.display="none";
-        start.style.display="none";
-        NewPlayerField.style.display="flex";
+    function RestartGame() {
+        GridOne.style.display = "none";
+        GridTwo.style.display = "none";
+        DisplayText.style.display = "none";
+        restart.style.display = "none";
+        start.style.display = "none";
+        NewPlayerField.style.display = "flex";
     }
-    function DisplayBattleField(){
-        start.style.display="none";
-        GridTwo.style.display="grid";
+    // display both game boards 
+    function DisplayBattleField() {
+        start.style.display = "none";
+        GridTwo.style.display = "grid";
+    }
+    // populate players One game board one 
+    function RenderFieldOne(FieldDataOne) {
+        console.log(FieldDataOne);
+
+    }
+    // populate players Two game board Two 
+    function RenderFieldTwo(FieldDataTwo) {
+        console.log(FieldDataTwo);
     }
 })();

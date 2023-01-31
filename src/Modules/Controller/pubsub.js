@@ -2,7 +2,8 @@
 export let pubsub = {
 
     subscriptions: {
-        GameUI: [],
+        GameBoardOne: [],
+        GameBoardTwo: [],
     },
 
     subscribe: function (subscriptionName, fn) {
