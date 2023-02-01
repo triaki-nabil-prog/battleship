@@ -2,7 +2,10 @@ import { pubsub } from "../Controller/pubsub.js";
 
 export let GameUi = (function () {
     //Game board state
-
+    let Ships = ["Carrier", "Battleship", "Destroyer", "Submarine", "PatrolBoat"];
+    let axes = ["x", "y"];
+    let PlacedShipIndex = 0;
+    let ShipPlacedState;
     //cache DOM
     const PlayerName = document.querySelector(".name");
     const NewPlayerField = document.querySelector(".player-new")
@@ -19,6 +22,8 @@ export let GameUi = (function () {
     AddGlobalEventListener("click", ".restart", RestartGame);
     AddGlobalEventListener("click", ".start", DisplayBattleField);
     AddGlobalEventListener("click", ".grid-two div", AttackFieldTwo);
+    AddGlobalEventListener("click", ".grid-one div", playerPlaceShip);
+    AddGlobalEventListener("click", ".grid-one div", WrongPlacement);
     //event listeners binder function
     function AddGlobalEventListener(type, selector, callback) {
         document.addEventListener(type, (e) => {
@@ -30,6 +35,8 @@ export let GameUi = (function () {
     //event subscription
     pubsub.subscribe("GameBoardOne", RenderFieldOne);
     pubsub.subscribe("GameBoardTwo", RenderFieldTwo);
+    pubsub.subscribe("winner", Winner);
+    pubsub.subscribe("ShipPlacedState", ShipPlaced);
     //display player game board to place ships 
     function PlaceShips() {
         NewPlayerField.style.display = "none";
@@ -38,6 +45,7 @@ export let GameUi = (function () {
         DisplayText.textContent = `Place your Ships Captain ${PlayerName.value}`;
         restart.style.display = "block";
         start.style.display = "block";
+
     }
     // return to  captain name selection 
     function RestartGame() {
@@ -47,12 +55,14 @@ export let GameUi = (function () {
         restart.style.display = "none";
         start.style.display = "none";
         NewPlayerField.style.display = "flex";
-        pubsub.publish("resetBoards",true);
+        PlacedShipIndex = 0;
+        pubsub.publish("resetBoards", true);
     }
     // display both game boards 
     function DisplayBattleField() {
         start.style.display = "none";
         GridTwo.style.display = "grid";
+        DisplayText.textContent = `Captain ${PlayerName.value} Enemy Battle field in sight! Attack`;
     }
     // populate players One game board one 
     function RenderFieldOne(FieldDataOne) {
@@ -61,7 +71,7 @@ export let GameUi = (function () {
                 if (typeof FieldDataOne[y][x] === "object") { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#8A5F08" }
                 else if (FieldDataOne[y][x] === "Hit") { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#B02522" }
                 else if (FieldDataOne[y][x] === "Miss") { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#354F8B" }
-                else if(FieldDataOne[y][x] === 0){GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#0F265D" }
+                else if (FieldDataOne[y][x] === 0) { GridOneCells[Number(`${y}${x}`)].style.backgroundColor = "#0F265D" }
             }
         }
     }
@@ -72,7 +82,7 @@ export let GameUi = (function () {
                 if (typeof FieldDataTwo[y][x] === "object") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#8A5F08" }
                 else if (FieldDataTwo[y][x] === "Hit") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#B02522" }
                 else if (FieldDataTwo[y][x] === "Miss") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#354F8B" }
-                else if(FieldDataTwo[y][x] === 0){GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#0F265D" }
+                else if (FieldDataTwo[y][x] === 0) { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#0F265D" }
             }
         }
     }
@@ -88,5 +98,45 @@ export let GameUi = (function () {
         coordinate.push(+x);
         coordinate.push(+y);
         pubsub.publish("cordAttack", coordinate)
+    }
+    // display winner 
+    function Winner(win) {
+        if (win === "POne") {
+            DisplayText.textContent = `Captain ${PlayerName.value} You Won the Battle`;
+        }
+        if (win === "PTwo") {
+            DisplayText.textContent = ` You lost Captain ${PlayerName.value} live to fight another day`;
+        }
+    }
+    // place player ships
+    function playerPlaceShip(cell) {
+        let yx, rest = 0;
+        let y, x = 0;
+        let coordinate = [];
+        if (PlacedShipIndex <= 4) {
+            GridOneCells.forEach(elem => {
+                if (elem.className === cell.target.className) [rest, yx] = elem.className.split('-');
+            });
+            [y, x] = yx.split('');
+            coordinate.push(+x);
+            coordinate.push(+y);
+            coordinate[2] = Ships[PlacedShipIndex];
+            coordinate.push("x");
+            console.log(coordinate);
+            pubsub.publish("PlacementCord", coordinate);
+            // check if ship was placed before moving to the next one 
+            console.log(ShipPlacedState);
+            if (ShipPlacedState) PlacedShipIndex++;
+        }
+    }
+    // check if position is good for ship placement 
+    function ShipPlaced(state) {
+        ShipPlacedState = state;
+    }
+    // indicate if players placed ship on UI was not successful 
+    function WrongPlacement(cell) {
+        if (!ShipPlacedState) {
+            cell.target.style.backgroundColor = "#B02522";
+        }
     }
 })();

@@ -28,14 +28,7 @@ export let GameLoop = (function () {
     let PatrolBoatTwo = Ship(2);
 
     function init() {
-        //place Ships on battlefield
-        //player one 
-        BattleFieldOne.placeShip(CarrierOne, 0, 0, 'y');
-        BattleFieldOne.placeShip(BattleshipOne, 4, 5, 'y');
-        BattleFieldOne.placeShip(DestroyerOne, 2, 2, 'y');
-        BattleFieldOne.placeShip(SubmarineOne, 6, 5, 'x');
-        BattleFieldOne.placeShip(PatrolBoatOne, 7, 6, 'x');
-        //player two 
+        //place player two Ships on battlefield
         RandomShipsPlacement(CarrierTwo);
         RandomShipsPlacement(BattleshipTwo);
         RandomShipsPlacement(DestroyerTwo);
@@ -46,16 +39,17 @@ export let GameLoop = (function () {
         pubsub.publish("GameBoardTwo", BattleFieldTwo.GameBoardData);
     }
 
-
     //event subscription
     pubsub.subscribe("cordAttack", PlayerOneAttack);
     pubsub.subscribe("resetBoards", Reset);
+    pubsub.subscribe("PlacementCord", PlayerShipPlacement);
     // player one attack battlefield of player two 
     function PlayerOneAttack([x, y]) {
         PlayerOne.attack(x, y, BattleFieldTwo);
         // refresh display  
         pubsub.publish("GameBoardTwo", BattleFieldTwo.GameBoardData);
         PlayerTwoAttack();
+        won(BattleFieldOne, BattleFieldTwo);
     }
     // player two attack battlefield of player one
     function PlayerTwoAttack() {
@@ -104,6 +98,36 @@ export let GameLoop = (function () {
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
         ];
         init();
+    }
+    // winner of the game
+    function won(BoardOne, BoardTwo) {
+        let winner = 0;
+        if (BoardOne.allSunk()) winner = "PTwo";
+        else if (BoardTwo.allSunk()) winner = "POne";
+        pubsub.publish("winner", winner);
+    }
+    // player placing his ships 
+    function PlayerShipPlacement([x, y, Ship, axis]) {
+        let state = false;
+        switch (Ship) {
+            case "Carrier":
+                state = BattleFieldOne.placeShip(CarrierOne, x, y, axis);
+                break;
+            case "Battleship":
+                state =  BattleFieldOne.placeShip(BattleshipOne, x, y, axis);
+                break;
+            case "Destroyer":
+                state = BattleFieldOne.placeShip(DestroyerOne, x, y, axis);
+                break;
+            case "Submarine":
+                state =  BattleFieldOne.placeShip(SubmarineOne, x, y, axis);
+                break;
+            case "PatrolBoat":
+                state =  BattleFieldOne.placeShip(PatrolBoatOne, x, y, axis);
+                break;
+        }
+        pubsub.publish("GameBoardOne", BattleFieldOne.GameBoardData);
+        pubsub.publish("ShipPlacedState",state);
     }
     init();
 

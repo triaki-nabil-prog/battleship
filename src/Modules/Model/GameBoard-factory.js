@@ -6,9 +6,9 @@ const GameBoardProto = {
         // don't let the ship go over the game board boundaries 
         if (!(0 <= x && x < 10) || !(0 <= y && y < 10)) return false;
         // case ship does not fit in x axis
-        if (((ship.length-1) + x > 9 || y > 9) && (axis === 'x' || axis === 'X')) return false;
+        if (((ship.length - 1) + x > 9 || y > 9) && (axis === 'x' || axis === 'X')) return false;
         // case ship does not fit in y axis
-        if ((x > 9 || (ship.length-1) + y > 9) && (axis === 'y' || axis === 'Y')) return false;
+        if ((x > 9 || (ship.length - 1) + y > 9) && (axis === 'y' || axis === 'Y')) return false;
         // case  ship overlap with another ship 
         if (axis === 'x' || axis === 'X') {
             for (let i = 0; i < ship.length; i++) {
@@ -39,8 +39,12 @@ const GameBoardProto = {
         if (this.GameBoardData[y][x]) {
             this.GameBoardData[y][x].hit();
             this.GameBoardData[y][x] = "Hit";
+            return true;
         }
-        else this.GameBoardData[y][x] = "Miss";
+        else {
+            this.GameBoardData[y][x] = "Miss";
+            return false;
+        }
     },
     // test if all ships are sunk
     allSunk() {

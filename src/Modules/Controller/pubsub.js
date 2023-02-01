@@ -6,6 +6,9 @@ export let pubsub = {
         GameBoardTwo: [],
         cordAttack:[],
         resetBoards:[],
+        winner:[],
+        PlacementCord:[],
+        ShipPlacedState:[],
     },
 
     subscribe: function (subscriptionName, fn) {
