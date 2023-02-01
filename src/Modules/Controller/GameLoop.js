@@ -23,6 +23,7 @@ export let GameLoop = (function () {
     let DestroyerTwo = Ship(3);
     let SubmarineTwo = Ship(3);
     let PatrolBoatTwo = Ship(2);
+    let winner = 0;
     function init() {
         //place player two Ships on battlefield
         RandomShipsPlacement(CarrierTwo);
@@ -67,38 +68,34 @@ export let GameLoop = (function () {
     }
     // reset data 
     function Reset() {
-        BattleFieldOne.GameBoardData = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        ];
-        BattleFieldTwo.GameBoardData = [
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        ];
+        PlayerOne = Player();
+        PlayerTwo = Player();
+        // create battle Field
+        BattleFieldOne = GameBoard();
+        BattleFieldTwo = GameBoard();
+        // create the Ships
+        //player one 
+        CarrierOne = Ship(5);
+        BattleshipOne = Ship(4);
+        DestroyerOne = Ship(3);
+        SubmarineOne = Ship(3);
+        PatrolBoatOne = Ship(2);
+        //player two
+        CarrierTwo = Ship(5);
+        BattleshipTwo = Ship(4);
+        DestroyerTwo = Ship(3);
+        SubmarineTwo = Ship(3);
+        PatrolBoatTwo = Ship(2);
+
+        winner = 0;
         init();
     }
     // winner of the game
     function won(BoardOne, BoardTwo) {
-        let winner = 0;
         if (BoardOne.allSunk()) winner = "PTwo";
         else if (BoardTwo.allSunk()) winner = "POne";
         pubsub.publish("winner", winner);
+        winner = 0;
     }
     // player placing his ships 
     function PlayerShipPlacement([x, y, Ship, axis]) {
