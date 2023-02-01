@@ -17,7 +17,6 @@ export let GameUi = (function () {
     const GridOneCells = document.querySelectorAll(".grid-one div");
     const GridTwoCells = document.querySelectorAll(".grid-two div");
     const axisBtn = document.querySelector(".axis-choice");
-
     //Bind events
     AddGlobalEventListener("click", ".new-game", PlaceShips);
     AddGlobalEventListener("click", ".restart", RestartGame);
@@ -47,8 +46,7 @@ export let GameUi = (function () {
         DisplayText.textContent = `Place your Ships Captain ${PlayerName.value}`;
         restart.style.display = "block";
         start.style.display = "block";
-        axisBtn.style.display= "block";
-
+        axisBtn.style.display = "block";
     }
     // return to  captain name selection 
     function RestartGame() {
@@ -57,14 +55,14 @@ export let GameUi = (function () {
         DisplayText.style.display = "none";
         restart.style.display = "none";
         start.style.display = "none";
-        axisBtn.style.display= "none";
+        axisBtn.style.display = "none";
         NewPlayerField.style.display = "flex";
         PlacedShipIndex = 0;
         pubsub.publish("resetBoards", true);
     }
     // display both game boards 
     function DisplayBattleField() {
-        axisBtn.style.display= "none";
+        axisBtn.style.display = "none";
         start.style.display = "none";
         GridTwo.style.display = "grid";
         DisplayText.textContent = `Captain ${PlayerName.value} Enemy Battle field in sight! Attack`;
@@ -84,7 +82,7 @@ export let GameUi = (function () {
     function RenderFieldTwo(FieldDataTwo) {
         for (let y = 0; y < 10; y++) {
             for (let x = 0; x < 10; x++) {
-                if (typeof FieldDataTwo[y][x] === "object") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#8A5F08" }
+                if (typeof FieldDataTwo[y][x] === "object") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#0F265D" }
                 else if (FieldDataTwo[y][x] === "Hit") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#B02522" }
                 else if (FieldDataTwo[y][x] === "Miss") { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#354F8B" }
                 else if (FieldDataTwo[y][x] === 0) { GridTwoCells[Number(`${y}${x}`)].style.backgroundColor = "#0F265D" }
@@ -143,7 +141,7 @@ export let GameUi = (function () {
         }
     }
     // selection of placement axis 
-    function SelectAxis(choice){
-        axis= choice.target.textContent;
+    function SelectAxis(choice) {
+        axis = choice.target.textContent;
     }
 })();

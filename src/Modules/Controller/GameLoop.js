@@ -3,9 +3,6 @@ import { GameBoard } from "../Model/GameBoard-factory.js";
 import { Ship } from "../Model/Ship-factory.js";
 import { pubsub } from "./pubsub.js";
 
-
-
-
 export let GameLoop = (function () {
     // create new player
     let PlayerOne = Player();
@@ -26,7 +23,6 @@ export let GameLoop = (function () {
     let DestroyerTwo = Ship(3);
     let SubmarineTwo = Ship(3);
     let PatrolBoatTwo = Ship(2);
-
     function init() {
         //place player two Ships on battlefield
         RandomShipsPlacement(CarrierTwo);
@@ -38,17 +34,16 @@ export let GameLoop = (function () {
         pubsub.publish("GameBoardOne", BattleFieldOne.GameBoardData);
         pubsub.publish("GameBoardTwo", BattleFieldTwo.GameBoardData);
     }
-
     //event subscription
     pubsub.subscribe("cordAttack", PlayerOneAttack);
     pubsub.subscribe("resetBoards", Reset);
     pubsub.subscribe("PlacementCord", PlayerShipPlacement);
     // player one attack battlefield of player two 
     function PlayerOneAttack([x, y]) {
-        PlayerOne.attack(x, y, BattleFieldTwo);
+        let attackState = PlayerOne.attack(x, y, BattleFieldTwo);
         // refresh display  
         pubsub.publish("GameBoardTwo", BattleFieldTwo.GameBoardData);
-        PlayerTwoAttack();
+        if (attackState) PlayerTwoAttack();
         won(BattleFieldOne, BattleFieldTwo);
     }
     // player two attack battlefield of player one
@@ -59,7 +54,6 @@ export let GameLoop = (function () {
     }
     // place ships one battle field two randomly 
     function RandomShipsPlacement(Ship) {
-
         // generate random cord
         let randX = Math.floor(Math.random() * 10);
         let randY = Math.floor(Math.random() * 10);
@@ -114,21 +108,20 @@ export let GameLoop = (function () {
                 state = BattleFieldOne.placeShip(CarrierOne, x, y, axis);
                 break;
             case "Battleship":
-                state =  BattleFieldOne.placeShip(BattleshipOne, x, y, axis);
+                state = BattleFieldOne.placeShip(BattleshipOne, x, y, axis);
                 break;
             case "Destroyer":
                 state = BattleFieldOne.placeShip(DestroyerOne, x, y, axis);
                 break;
             case "Submarine":
-                state =  BattleFieldOne.placeShip(SubmarineOne, x, y, axis);
+                state = BattleFieldOne.placeShip(SubmarineOne, x, y, axis);
                 break;
             case "PatrolBoat":
-                state =  BattleFieldOne.placeShip(PatrolBoatOne, x, y, axis);
+                state = BattleFieldOne.placeShip(PatrolBoatOne, x, y, axis);
                 break;
         }
         pubsub.publish("GameBoardOne", BattleFieldOne.GameBoardData);
-        pubsub.publish("ShipPlacedState",state);
+        pubsub.publish("ShipPlacedState", state);
     }
     init();
-
 })();
