@@ -3,7 +3,7 @@ import { pubsub } from "../Controller/pubsub.js";
 export let GameUi = (function () {
     //Game board state
     let Ships = ["Carrier", "Battleship", "Destroyer", "Submarine", "PatrolBoat"];
-    let axes = ["x", "y"];
+    let axis = "x";
     let PlacedShipIndex = 0;
     let ShipPlacedState;
     //cache DOM
@@ -16,6 +16,7 @@ export let GameUi = (function () {
     const start = document.querySelector(".start");
     const GridOneCells = document.querySelectorAll(".grid-one div");
     const GridTwoCells = document.querySelectorAll(".grid-two div");
+    const axisBtn = document.querySelector(".axis-choice");
 
     //Bind events
     AddGlobalEventListener("click", ".new-game", PlaceShips);
@@ -24,6 +25,7 @@ export let GameUi = (function () {
     AddGlobalEventListener("click", ".grid-two div", AttackFieldTwo);
     AddGlobalEventListener("click", ".grid-one div", playerPlaceShip);
     AddGlobalEventListener("click", ".grid-one div", WrongPlacement);
+    AddGlobalEventListener("click", ".axis", SelectAxis);
     //event listeners binder function
     function AddGlobalEventListener(type, selector, callback) {
         document.addEventListener(type, (e) => {
@@ -45,6 +47,7 @@ export let GameUi = (function () {
         DisplayText.textContent = `Place your Ships Captain ${PlayerName.value}`;
         restart.style.display = "block";
         start.style.display = "block";
+        axisBtn.style.display= "block";
 
     }
     // return to  captain name selection 
@@ -54,12 +57,14 @@ export let GameUi = (function () {
         DisplayText.style.display = "none";
         restart.style.display = "none";
         start.style.display = "none";
+        axisBtn.style.display= "none";
         NewPlayerField.style.display = "flex";
         PlacedShipIndex = 0;
         pubsub.publish("resetBoards", true);
     }
     // display both game boards 
     function DisplayBattleField() {
+        axisBtn.style.display= "none";
         start.style.display = "none";
         GridTwo.style.display = "grid";
         DisplayText.textContent = `Captain ${PlayerName.value} Enemy Battle field in sight! Attack`;
@@ -121,11 +126,9 @@ export let GameUi = (function () {
             coordinate.push(+x);
             coordinate.push(+y);
             coordinate[2] = Ships[PlacedShipIndex];
-            coordinate.push("x");
-            console.log(coordinate);
+            coordinate.push(axis);
             pubsub.publish("PlacementCord", coordinate);
             // check if ship was placed before moving to the next one 
-            console.log(ShipPlacedState);
             if (ShipPlacedState) PlacedShipIndex++;
         }
     }
@@ -138,5 +141,9 @@ export let GameUi = (function () {
         if (!ShipPlacedState) {
             cell.target.style.backgroundColor = "#B02522";
         }
+    }
+    // selection of placement axis 
+    function SelectAxis(choice){
+        axis= choice.target.textContent;
     }
 })();
